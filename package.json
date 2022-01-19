@@ -1,0 +1,32 @@
+{
+  "name": "fastify_test",
+  "version": "0.0.0",
+  "description": "fastify tests",
+  "main": "index.js",
+  "author": "NetuxLab <desarrollo@netuxtecnologia.com>",
+  "license": "NONE",
+  "private": true,
+  "type": "module",
+  "packageManager": "yarn@3.1.0",
+  "engines": {
+    "npm": "please-use-yarn",
+    "node": ">=16.13.0",
+    "yarn": ">=3.1.0"
+  },
+  "scripts": {
+    "start": "nodemon --ignore '*.test.js' index.js | pino-pretty -t \"SYS:yyyy-mm-dd'T'HH:MM:ss.lo\"",
+    "serve": "node index.js",
+    "lint": "eslint --ext .js ./",
+    "lint:fix": "eslint --fix --ext .js ./",
+    "pretty": "prettier --write ./*.js",
+    "precommit": "lint-staged",
+    "release": "standard-version --infile ./CHANGELOG.md --path ./ --tag-prefix @nx_mipaciente/api-gw@"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "pino-pretty": "^7.4.0"
+  },
+  "dependencies": {
+    "fastify": "^3.24.1"
+  }
+}
