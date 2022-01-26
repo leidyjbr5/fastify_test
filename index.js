@@ -1,15 +1,16 @@
 import fastify from 'fastify'
-
+import generateRoutesOrganizations from './routes/organizationsEndpoints.js'
 
 const server = fastify({
   logger: { level: 'info' },
   ignoreTrailingSlash: true,
 })
 
-
 server.get('/ok', (request, reply) => {
   reply.status(204).send()
 })
+
+generateRoutesOrganizations(server)
 
 const start = async () => {
   try {
