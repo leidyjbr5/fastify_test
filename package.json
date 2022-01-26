@@ -27,6 +27,8 @@
     "pino-pretty": "^7.4.0"
   },
   "dependencies": {
-    "fastify": "^3.24.1"
+    "fastify": "^3.24.1",
+    "sequelize": "^6.14.1",
+    "sqlite3": "^5.0.2"
   }
 }
