@@ -1,4 +1,23 @@
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 import { getAllOrganizations, createOrganizations } from './../services/organizationsServices.js'
+import { createWriteStream } from 'fs'
+import { resolve } from 'path'
+import { s3Client, bucketName } from './../services/s3Service.js'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+
+// Stolen from https://stackoverflow.com/a/67729663
+function stream2buffer(stream) {
+  return new Promise((resolve, reject) => {
+    const _buf = []
+
+    stream.on('data', (chunk) => _buf.push(chunk))
+    stream.on('end', () => resolve(Buffer.concat(_buf)))
+    stream.on('error', (err) => reject(err))
+  })
+}
+
+const pump = promisify(pipeline)
 
 async function getAllController(request, reply) {
   const organizations = await getAllOrganizations()
@@ -6,7 +25,25 @@ async function getAllController(request, reply) {
 }
 
 async function createController(request, reply) {
-  const organization = await createOrganizations(request.body)
+  const data = await request.file()
+  // local:
+  // const file = createWriteStream(`${new Date().getTime()}-${data.filename}`)
+  // await pump(data.file, file)
+  const fileName = `${new Date().getTime()}-${data.filename}`
+  const s3Response = await s3Client.send(
+    new PutObjectCommand({
+      Bucket: bucketName,
+      Key: fileName,
+      Body: await stream2buffer(data.file),
+      ACL: 'public-read',
+      ContentType: data.mimetype,
+    }),
+  )
+  const organization = await createOrganizations({
+    name: data.fields.name.value,
+    logoName: data.fieldname,
+    logoPath: `https://${bucketName}.nyc3.digitaloceanspaces.com/${fileName}`,
+  })
   reply.send(organization)
 }
 

@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import generateRoutesOrganizations from './routes/organizationsEndpoints.js'
-import fastifyIO from "fastify-socket.io";
+import fastifyIO from 'fastify-socket.io'
+import fastifyMultipart from 'fastify-multipart'
 
 const server = fastify({
   logger: { level: 'info' },
@@ -12,13 +13,14 @@ server.get('/ok', (request, reply) => {
 })
 
 generateRoutesOrganizations(server)
-server.register(fastifyIO);
+server.register(fastifyIO)
+server.register(fastifyMultipart)
 
 const start = async () => {
   try {
     await server.ready()
-    server.io.on("connection", (socket) => {
-      socket.on("example", (message) => {
+    server.io.on('connection', (socket) => {
+      socket.on('example', (message) => {
         console.log(message)
       })
     })
@@ -29,10 +31,10 @@ const start = async () => {
   }
 }
 
-server.get("/socket", (req, reply) => {
-  if (server.io.emit('hello', "hello")){
+server.get('/socket', (req, reply) => {
+  if (server.io.emit('hello', 'hello')) {
     reply.send('Ok')
-  } else{
+  } else {
     reply.code(404)
   }
 })
