@@ -5,8 +5,6 @@ const sequelize = new Sequelize('database', 'username', 'password', {
   storage: './database.sqlite',
 })
 
-await sequelize.sync({})
-
 const Organization = sequelize.define('Organization', {
   id: {
     type: Sequelize.DataTypes.INTEGER,
@@ -18,6 +16,16 @@ const Organization = sequelize.define('Organization', {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
   },
+  logoName: {
+    type: Sequelize.DataTypes.STRING,
+    allowNull: false,
+  },
+  logoPath: {
+    type: Sequelize.DataTypes.STRING,
+    allowNull: false,
+  },
 })
+
+await sequelize.sync()
 
 export default Organization
