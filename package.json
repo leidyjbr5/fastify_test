@@ -7,7 +7,7 @@
   "license": "NONE",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@3.1.0",
+  "packageManager": "yarn@3.2.3",
   "engines": {
     "npm": "please-use-yarn",
     "node": ">=16.13.0",
