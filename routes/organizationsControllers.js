@@ -27,27 +27,29 @@ async function getAllController(request, reply) {
 async function createController(request, reply) {
   const data = await request.file()
   // local:
-  // const file = createWriteStream(`${new Date().getTime()}-${data.filename}`)
-  // await pump(data.file, file)
-  const fileName = `${new Date().getTime()}-${data.filename}`
-  const s3Response = await s3Client.send(
-    new PutObjectCommand({
-      Bucket: bucketName,
-      Key: fileName,
-      Body: await stream2buffer(data.file),
-      ACL: 'public-read',
-      ContentType: data.mimetype,
-    }),
-  )
+  const file = createWriteStream(`${new Date().getTime()}-${data.filename}`)
+  console.log(file)
+  await pump(data.file, file)
+  // const fileName = `${new Date().getTime()}-${data.filename}`
+  // const s3Response = await s3Client.send(
+  //   new PutObjectCommand({
+  //     Bucket: bucketName,
+  //     Key: fileName,
+  //     Body: await stream2buffer(data.file),
+  //     ACL: 'public-read',
+  //     ContentType: data.mimetype,
+  //   }),
+  // )
 
   // const used = process.memoryUsage();
   // for (let key in used) {
   //   console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
   // }
+  // logo Path digitalOcean: `https://${bucketName}.nyc3.digitaloceanspaces.com/${fileName}`,
   const organization = await createOrganizations({
     name: data.fields.name.value,
     logoName: data.fieldname,
-    logoPath: `https://${bucketName}.nyc3.digitaloceanspaces.com/${fileName}`,
+    logoPath: file.path
   })
   reply.send(organization)
 }
